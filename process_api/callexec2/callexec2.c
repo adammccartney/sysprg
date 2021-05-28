@@ -25,24 +25,23 @@ int intptr[MAXLINES]; /* main memory storage for ints */
 
 int main(int argc, char *argv[])
 {
-    int initpid = (int) getpid();
     int rc = fork();
     if (rc < 0) { // fork failed...fork it!
         fprintf(stderr, "fork failed\n");
         exit(1);
-    } else if (rc == initpid + 1) { // child (new process)
+    } else if (rc == 0) { // child (new process)
         printf("hello, I am child (pid:%d)\n", (int) getpid());
         char *myargs[6];
         myargs[0] = strdup("python3");    /* filename of executable */
         myargs[1] = strdup("numgen.py");  /* script to run */
-        myargs[2] = strdup("--ulimit=64000");    /* upper limit of rand range */
+        myargs[2] = strdup("--ulimit=64");    /* upper limit of rand range */
         myargs[3] = strdup("--numvals=100");         /* gen 10 signed ints */
         myargs[4] = strdup("--ofile=num.out");    /* write them here */
         myargs[5] = NULL;                  // mark end of array
         execvp(myargs[0], myargs);
         printf("this shouldn't print out");
     } else {
-        //int rc_wait = wait(NULL);
+        int rc_wait = wait(NULL);
         printf("hello, I am parent of %d (pid:%d)\n",
                 rc, (int) getpid());
         int nints;
