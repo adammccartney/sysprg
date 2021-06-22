@@ -1,0 +1,31 @@
+gcc -Wall -g -O -o wcat wcat.c 
+wcat.c: In function ‘main’:
+wcat.c:45:28: error: ‘filesz’ undeclared (first use in this function); did you mean ‘fileno’?
+         bufsize = pgsize - filesz;
+                            ^~~~~~
+                            fileno
+wcat.c:45:28: note: each undeclared identifier is reported only once for each function it appears in
+wcat.c:52:16: warning: passing argument 1 of ‘malloc’ makes integer from pointer without a cast [-Wint-conversion]
+         malloc(buf, bufsize);
+                ^~~
+In file included from wcat.c:5:
+/usr/include/stdlib.h:539:14: note: expected ‘size_t’ {aka ‘long unsigned int’} but argument is of type ‘char *’
+ extern void *malloc (size_t __size) __THROW __attribute_malloc__ __wur;
+              ^~~~~~
+wcat.c:52:9: error: too many arguments to function ‘malloc’
+         malloc(buf, bufsize);
+         ^~~~~~
+In file included from wcat.c:5:
+/usr/include/stdlib.h:539:14: note: declared here
+ extern void *malloc (size_t __size) __THROW __attribute_malloc__ __wur;
+              ^~~~~~
+wcat.c:53:9: error: too few arguments to function ‘simplecat’
+         simplecat(fp, buf);
+         ^~~~~~~~~
+wcat.c:8:6: note: declared here
+ void simplecat(FILE *fp, char *buf, size_t bufsize)
+      ^~~~~~~~~
+wcat.c:23:12: warning: variable ‘fsize’ set but not used [-Wunused-but-set-variable]
+     size_t fsize;
+            ^~~~~
+make: *** [Makefile:10: wcat] Error 1
