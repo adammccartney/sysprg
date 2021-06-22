@@ -12,16 +12,10 @@ int main(int argc, char *argv[])
     int error = 0;
     FILE *fp = NULL;
     /* let's get the page size on our system. we can use this as base for buf*/
-    //size_t pgsize = getpagesize();
     int i;
-    //size_t fsize; 
 
-    // create a buffer variable to temporarily store the files being passed
-    //char *buf;
-    //size_t bufsize;
-    
     if (argc == 1) {
-        printf("usage: wget [file1] [file2] [filen]\n");
+        //printf("usage: wget [file1] [file2] [filen]\n");
         return 0;
     }
 
@@ -33,21 +27,12 @@ int main(int argc, char *argv[])
                 error++;
                 goto exit;
             }
-            // get the file size
-            //fseek(fp, 0L, SEEK_END);
-            //fsize = ftell(fp);
-            //bufsize = pgsize - fsize; 
-            //rewind(fp); 
-            //buf = malloc(bufsize); 
-            // simplecat(fp); 
             char lbuf[MAXLINE]; 
             // read from file to buffer 
-            if ( fgets(lbuf, MAXLINE, fp) != NULL) {
+            while (fgets(lbuf, MAXLINE, fp)) {
                 // write from buffer to stdout
-                //printf("%s", lbuf);
-                puts(lbuf);
+                printf("%s", lbuf);
             }
-            //free(buf);
             fclose(fp);
         }
         return 0;

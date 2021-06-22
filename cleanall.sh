@@ -3,7 +3,7 @@
 
 rm ./*.a
 
-for d in ./*/*/
+for d in ./*/*/*/
 do
     (cd "$d" && make clean && $command)
 done

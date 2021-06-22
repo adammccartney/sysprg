@@ -10,4 +10,4 @@ $(EXE): $(SOURCES)
 	$(CC) $(CFLAGS) -o $(EXE) $(SOURCES) 
 
 clean:
-	rm -f $(EXE)
+	rm -rf $(EXE) tests-out
