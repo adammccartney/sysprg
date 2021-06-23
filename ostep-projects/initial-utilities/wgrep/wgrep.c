@@ -11,12 +11,11 @@
 
 int main(int argc, char *argv[])
 {
-    int error = 0;
     FILE *fp;
     int i;
     char sterm[MAXLINE];
     char *line;
-    char *lbuf = NULL;
+    //char *lbuf = NULL;
     size_t len = 0;
     ssize_t nread;
 
@@ -33,11 +32,14 @@ int main(int argc, char *argv[])
                                        empty string is '\0' */
 
     if (argc == 2) { /* search stdin */
-        while (fgets(lbuf, MAXLINE, STDIN_FILENO) != NULL) {
-            printf("%s", lbuf);
+        char *buffer = (char *) malloc((strlen(line) + 1));
+        while (fgets(buffer, MAXLINE, stdin) != NULL) {
+            if (strstr(buffer, sterm) != NULL) { /* string found */
+                printf("%s", buffer);
+            }
         }
-        free(lbuf);
-        lbuf = NULL;
+        free(buffer);
+        buffer = NULL;
         return 0;
     }
 
@@ -46,8 +48,7 @@ int main(int argc, char *argv[])
             fp = fopen(argv[i], "r");
             if (fp == NULL) {
                 printf("wgrep: cannot open file\n");
-                error++;
-                goto exit;
+                return 1;
             }
             
             /* search files */
@@ -66,7 +67,4 @@ int main(int argc, char *argv[])
         }
         return 0;
     }
-
-exit:
-        return error;
 }
