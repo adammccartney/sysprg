@@ -1,0 +1,6 @@
+gcc -Wall -g -O -o wzip wzip.c 
+wzip.c: In function ‘main’:
+wzip.c:71:1: error: expected declaration or statement at end of input
+ }
+ ^
+make: *** [Makefile:10: wzip] Error 1
