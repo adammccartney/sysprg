@@ -1,0 +1,4 @@
+wzip.py:17:62: W291 trailing whitespace
+wzip.py:23:1: E302 expected 2 blank lines, found 1
+wzip.py:46:1: E305 expected 2 blank lines after class or function definition, found 1
+wzip.py:46:26: E999 SyntaxError: unexpected EOF while parsing

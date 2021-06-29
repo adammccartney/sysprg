@@ -58,6 +58,10 @@ int main (int argc, char *argv[])
     char c; /* char that recurs */
     u_int8_t ch; /* our char will be ascii, so we can store it in 8 bits */
 
+    short test = 126;
+
+    printf("short test is %lu bytes\n", sizeof(test));
+
     int count = 0;
 
     printf("nargs: %d\n", argc);
