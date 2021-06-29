@@ -1,2 +1,5 @@
 # binary files that might slip through
 *.o
+
+# build directories for out of source builds
+build/

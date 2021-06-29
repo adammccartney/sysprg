@@ -1,0 +1,4 @@
+mkdir -p build
+find . -type f -name "*.[c|h]" | xargs clang-format -i
+clang -c -g -Wall -O src/main.c -o build/main.o
+clang build/main.o -o build/cdecl

@@ -1,0 +1,15 @@
+[
+ {
+  "directory": "/home/adam/Code/sysprg/ostep-projects/initial-utilities/wzip",
+  "arguments": [
+   "clang",
+   "-Wall",
+   "-g",
+   "-O",
+   "-o",
+   "wzip",
+   "wzip.c"
+  ],
+  "file": "wzip.c"
+ }
+]
