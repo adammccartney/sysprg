@@ -3,3 +3,6 @@
 
 # build directories for out of source builds
 build/
+
+# large files 
+ostep-projects/initial-utilities/wzip/file.z
