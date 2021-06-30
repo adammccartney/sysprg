@@ -1,8 +1,8 @@
 91 warnings generated.
-/home/adam/Code/sysprg/ostep-projects/initial-utilities/wzip/wzip.c:154:29: error: use 'fopen' mode 'e' to set O_CLOEXEC [android-cloexec-fopen,-warnings-as-errors]
-        fp = fopen(argv[i], "r");
-                            ^~~~
-                            "re"
+/home/adam/Code/sysprg/ostep-projects/initial-utilities/wzip/wzip.c:191:30: error: use 'fopen' mode 'e' to set O_CLOEXEC [android-cloexec-fopen,-warnings-as-errors]
+        fp = fopen(files[i], "r+");
+                             ^~~~~
+                             "r+e"
 Suppressed 90 warnings (90 in non-user code).
 Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.
 1 warning treated as error

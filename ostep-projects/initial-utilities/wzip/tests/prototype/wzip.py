@@ -106,7 +106,7 @@ def isatend(line, current):
 
 
 def readlines(file):
-    ch = "\0"
+    ch = '\0'
     lines = list(open(file, "r"))
     for l in lines:
         current = 0
