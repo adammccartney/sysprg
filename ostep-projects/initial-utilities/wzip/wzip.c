@@ -17,9 +17,10 @@ struct token {
 };
 
 
-size_t numbytes (u_int32_t num, char ch)
+size_t numbytes (struct token t)
 {
-    return sizeof(num + ch);
+    size_t mybytes = sizeof(t.count) + sizeof(t.ch);
+    return mybytes;
 }
 
 /* write number of occurrences of char as 4 byte int,
@@ -30,7 +31,8 @@ int printToken (struct token t) { /* writes <token.count><token.ch> to stdout */
         return 1; /* shiznit ... */
     }
     size_t bytecheck;
-    if ( (bytecheck = numbytes(t.count, t.ch)) == 5) { /* format correct */
+    if ( (bytecheck = numbytes(t)) == 5) { /* format correct */
+        //printf("writing t.count: %d\n", t.count);
         fwrite(&t.count, sizeof(u_int32_t), 1, stdout);
         printf("%c", t.ch);
     } else {
@@ -40,74 +42,16 @@ int printToken (struct token t) { /* writes <token.count><token.ch> to stdout */
     return 0; /* print successful */
 }
 
-void updateToken (struct token t, u_int8_t ch) { 
-    /* if you can figure out a way to check this for falsity return 1*/
-    /* otherwise */
-    t.count = 1;     /* set token.count back to 1 */
-    t.ch = ch;       /* set new char */
-}
-
-/* boolean methods, used to test state */
-
-bool issinglefile (int argc) 
-{
-    if (argc == 2) { 
-        return true;
-    }  
-    return false;
-}
-
-bool ismultifile (int argc)
-{
-    if (argc > 2) { 
-        return true;
-    } 
-    return false;
-}
-
-bool chcompare (u_int8_t a, u_int8_t b)
-{
-    if (a == b) { 
-        return true;
-    } 
-    return false;
-}
-
-bool isendlbuf (char ch)
-{
-    /* end of line buffer */
-    if (ch == '\0') { 
-        return true;
+struct token updateToken (struct token t, u_int8_t ch, char flag) { 
+    if (flag == 's')  { /* same token, just increment count */
+        t.count++;     /* set token.count back to 1 */
+    } else if (flag == 'n') {
+        t.count = 1;     /* reset count */
+    } else {
+        perror("Error: unknown flag passed to updateToken.\n");
     }
-    return false;
-}
-
-bool isnewline (char ch)
-{
-    /* buffer contains newline */
-    if (ch == '\n') { 
-        return true;
-    }
-    return false;
-}
-
-bool isendof (char ch)
-{
-    /* buffer contains end of file */
-    if (ch == EOF) { 
-        return true;
-    }
-    return false;
-}
-
-bool isnewchar (char ch)
-{
-    if ( (!(isnewline(ch))) &&
-         (!(isendlbuf(ch))) &&
-         (!(isendof(ch))) ) { 
-        return true;
-    }
-    return false;
+    t.ch = ch;
+    return t;
 }
 
 bool isatend (ssize_t lsz, int current) { 
@@ -122,11 +66,12 @@ u_int8_t advance (const char *line, ssize_t lsz, int current) {
     if (current < lsz) {
         tok = line[current];
     }
-    return tok;
+    return tok; /* returns null if current overflows buffer */
 }
 
 u_int8_t peeknext (const char *line, ssize_t lsz, int current) {
-    u_int8_t tok = '\0'; /* initialize on the empty ch */
+    u_int8_t tok = '\0'; /* initialize on the empty ch 
+                          * returns null if next overflows buffer */
     if ((current + 1) < lsz) {
         tok = line[current];
     }
@@ -139,7 +84,7 @@ u_int8_t peeknext (const char *line, ssize_t lsz, int current) {
  * write intermediate changes
  * grepeats == lrepeats
  * return ch */
-int readlines (FILE *fp, struct token t)
+struct token readlines (FILE *fp, struct token t)
 {
     char *line;             /* points to buffer */
     size_t len = 0;         /* size of buffer */
@@ -149,55 +94,91 @@ int readlines (FILE *fp, struct token t)
     u_int8_t initchar = '\0'; /* initial character */
     u_int8_t curch = '\0';  /* current char */
     u_int8_t nxtch = '\0';  /* next char */
+    u_int8_t lstch = '\0';
     bool endpos = false;
 
     while ((linelen = getline(&line, &len, fp)) != -1) {
+        
         int j;
         current = 0;  /* set current position to beginning of line */
         initchar = line[current];   /* read lines first character */
-        updateToken(t, initchar);
+
+        if ((lstch != initchar) && 
+            (lstch != '\0')) { /* new line, new char */
+            succ = printToken(t);
+            printf("%c", '\n'); /* print control character null */
+        } 
+
         for (j = 0; j < linelen; j++) { 
+            
             curch = advance(line, linelen, current); /* advancing the curch of nameology*/
             nxtch = peeknext(line, linelen, current);
-            if ((curch == '\0') || (nxtch == '\0')) {  
-                perror("Error: buffer overflow\n");
-                return 1; /* shiznit */
-            }
             endpos = isatend(linelen, current);
-            if (endpos == false) {
-                current++;
+            //printf("t.count: %d\n", t.count);
+
+            if (nxtch == '\0') { /* end of line attempt at buffer overflow */
+                //printf("control 1\n");
+                endpos = true;
             }
-            if (curch == nxtch) {
-                updateToken(t, curch);
+            if ((endpos == false) && /* this is the first original char */
+                (current == 0)    &&
+                (lstch == '\0')   && 
+                (t.count == 0)) {
+                t = updateToken(t, curch, 'n');
             }
-            if (curch != nxtch) {
+            if ((endpos == false) &&
+                (current == 0)    &&
+                (lstch == '\0')   &&
+                (t.count != 1)) {  /* char carries over from last line */
+                t = updateToken(t, curch, 's');
+            }
+            if ((curch == nxtch)  &&   /* repeat char within bounds */
+                (endpos == false)) {
+                //printf("control 2\n");
+                t = updateToken(t, curch, 's');
+            }
+            if ((curch != nxtch) && 
+                (endpos == false)) { /* new char within bounds */
+                //printf("control 3\n");
                 succ = printToken(t);
-                updateToken(t, nxtch);
+                t = updateToken(t, nxtch, 'n');
             }
+            if ((curch != nxtch) && 
+                (endpos == true)) { /* end of line, token has state */
+                //printf("control 4\n");
+                lstch = curch;      /* control for next line */
+            }
+            
+            current++;
         }            
     }
     free(line);
     line = NULL;
-    fclose(fp);
-    return succ;
+    return t;
 }
 
 int procfiles (int nfiles, char *files[]) {
     FILE *fp;               /* file stream */
     int i = 1;              /* files[0] is binary file */
     struct token curtok = { .count = 0, .ch = '\0' }; /* initialize as null */
+    int succ = 0;
 
     while (i < nfiles) {
-        fp = fopen(files[i], "r+");
+        fp = fopen(files[i], "r");
         if (fp == NULL) {
             printf("wzip: cannot open file\n");
             return 1; /* shiznit ... */
         }
-        int succ = 1; /* failbit ... fail four bytes, but who's counting */
-        succ = readlines(fp, curtok);
-        if (succ == 0) { /* write successful */
+        curtok = readlines(fp, curtok);
+        if (curtok.count != 0) { /* read successful */
             i++; /* get next file */
         }
+        if ( i >= nfiles ) { /* at last file, flush state */
+            succ = printToken(curtok);
+            curtok = updateToken(curtok, '\0', 'n'); /* end state */
+        }
+
+        fclose(fp);
     }
     return 0; /* files processing successful */
 } 
@@ -224,5 +205,5 @@ int main(int argc, char *argv[])
     if (succ == 1) {
         printf("Error: failbytes are set to fail, call Sherlock!\n");
     }
-    return 0; 
+    return succ; 
 }

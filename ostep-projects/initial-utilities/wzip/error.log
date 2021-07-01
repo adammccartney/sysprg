@@ -1,9 +1,1 @@
 clang -Wall -g -O -o wzip wzip.c 
-wzip.c:164:14: error: use of undeclared identifier 'lch'
-        if ((lch = proclines(fp, ch, grepeats) == EOF)) { 
-             ^
-wzip.c:168:15: warning: result of comparison of constant -1 with expression of type 'u_int8_t' (aka 'unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
-    if ( (tch == EOF) && (grepeats != 0) ) {/* state in last file, last line */
-          ~~~ ^  ~~~
-1 warning and 1 error generated.
-make: *** [Makefile:14: wzip] Error 1
