@@ -1,1 +1,48 @@
 clang -Wall -g -O -o wzip wzip.c 
+wzip.c:61:5: error: expected expression
+    else {
+    ^
+wzip.c:67:58: error: function definition is not allowed here
+struct token updateTokenCh (struct token t, u_int8_t ch) { 
+                                                         ^
+wzip.c:73:41: error: function definition is not allowed here
+bool isatend (ssize_t lsz, int current) { 
+                                        ^
+wzip.c:82:64: error: function definition is not allowed here
+bool isFirstOrigChar (int current, char lstch, struct token t) {
+                                                               ^
+wzip.c:95:65: error: function definition is not allowed here
+bool isNormRepeatChar (bool endpos, u_int8_t cur, u_int8_t nxt) {
+                                                                ^
+wzip.c:105:64: error: function definition is not allowed here
+bool isNewCharInLine (bool endpos, u_int8_t cur, u_int8_t nxt) {
+                                                               ^
+wzip.c:115:60: error: function definition is not allowed here
+bool isEndOfLine (bool endpos, u_int8_t cur, u_int8_t nxt) {
+                                                           ^
+wzip.c:123:78: error: function definition is not allowed here
+bool isLineRepeatChar (bool endpos, int current, char lstch, struct token t) {
+                                                                             ^
+wzip.c:133:63: error: function definition is not allowed here
+u_int8_t advance (const char *line, ssize_t lsz, int current) {
+                                                              ^
+wzip.c:141:64: error: function definition is not allowed here
+u_int8_t peeknext (const char *line, ssize_t lsz, int current) {
+                                                               ^
+wzip.c:157:1: error: function definition is not allowed here
+{
+^
+wzip.c:233:43: error: function definition is not allowed here
+int procfiles (int nfiles, char *files[]) {
+                                          ^
+wzip.c:260:1: error: function definition is not allowed here
+{
+^
+wzip.c:282:2: error: expected '}'
+}
+ ^
+wzip.c:51:59: note: to match this '{'
+struct token updateTokenCount (struct token t, char flag) {
+                                                          ^
+14 errors generated.
+make: *** [Makefile:14: wzip] Error 1

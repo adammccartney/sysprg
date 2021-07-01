@@ -17,19 +17,25 @@ struct token {
 };
 
 
-size_t numbytes (struct token t)
-{
+size_t numbytes (struct token t) {
+    /* calculates the number of bytes in the attributes of a token */
+    /* assumes a token has two attributes */
     size_t mybytes = sizeof(t.count) + sizeof(t.ch);
     return mybytes;
 }
 
-/* write number of occurrences of char as 4 byte int,
- * followed by char as ASCII */
-int printToken (struct token t) { /* writes <token.count><token.ch> to stdout */
+int printToken (struct token t) { 
+    /* write <token.count><token.ch> to stdout */
+    /* write number of occurrences of char as 4 byte int,
+     * followed by char as ASCII i
+     * function returns 0 on success, 1 on error
+     * */
+    
     if ((t.ch < 0) || (t.ch > 127)) {
         perror("Error: token not a valid ascii character\n");
         return 1; /* shiznit ... */
     }
+
     size_t bytecheck;
     if ( (bytecheck = numbytes(t)) == 5) { /* format correct */
         //printf("writing t.count: %d\n", t.count);
@@ -42,20 +48,85 @@ int printToken (struct token t) { /* writes <token.count><token.ch> to stdout */
     return 0; /* print successful */
 }
 
-struct token updateToken (struct token t, u_int8_t ch, char flag) { 
-    if (flag == 's')  { /* same token, just increment count */
-        t.count++;     /* set token.count back to 1 */
-    } else if (flag == 'n') {
-        t.count = 1;     /* reset count */
+struct token updateTokenCount (struct token t, char flag) {
+    /* updates token.count */
+    if (flag == 's') { /* flag (s)ustain, assumes token.ch is sustained */
+       t.count++;
+    } else if (flag == 'n') { /* flag (n)ew, assumes token.ch is new */ 
+                              /* this assumption is made on having seen */
+                              /* that the next char is a new token */
+        t.count = 0;          /* resets t.count to initial value */
+    } else if (flag == 'i') { /* we've met the initial token */
+        t.count = 1;
     } else {
-        perror("Error: unknown flag passed to updateToken.\n");
+        perror("Error: uknown flag passed to updateTokenCount");
     }
+    return t;
+}
+
+struct token updateTokenCh (struct token t, u_int8_t ch) { 
+    /* updates a token's char */ 
     t.ch = ch;
     return t;
 }
 
 bool isatend (ssize_t lsz, int current) { 
     if (current >= lsz) {
+        return true;
+    }
+    return false;
+}
+
+
+
+bool isFirstOrigChar (int current, char lstch, struct token t) {
+    /* Assumes that the token may be carrying state from another file
+     * so it performs three checks: */
+    if ((current == 0)    &&     /* is head at initial read position */
+        (lstch == '\0')   &&     /* is the lstch set to NULL */
+                                 /* last char may not be NULL if the last file 
+                                  * has state to maintain */
+        (t.count == 0)) {        /* is the token count zero */
+        return true;
+    }
+    return false;
+}
+
+bool isNormRepeatChar (bool endpos, u_int8_t cur, u_int8_t nxt, int current) {
+    /* Assumes we might be about to overflow the buffer or that next 
+     * char is new, checks for: */
+    if ((endpos == false) &&  /* end of buffer */ 
+        (cur == nxt)      &&  /* equality */
+        (current != 0)) {     /* not initial char */
+        return true; 
+    }
+    return false;
+}
+
+bool isNewCharInLine (bool endpos, u_int8_t cur, u_int8_t nxt) {
+    /* Assumes that we might overflow the buffer 
+     * or next char repeats checks: */
+    if ((endpos == false) &&    /* will not try to read invalid */
+        (cur != nxt)) {         /* different chars */
+        return true;
+    }
+    return false;
+}
+
+bool isEndOfLine (bool endpos, u_int8_t cur, u_int8_t nxt) {
+    if ((cur != nxt) &&
+        (endpos == true)) {
+        return true;
+    }
+    return false;
+}
+
+bool isLineRepeatChar (bool endpos, int current, char lstch) {
+    /* Assume that we have received a token with state from the last line 
+     * perform three checks : */
+    if ((endpos == false) && /* check not overflowing buffer */
+        (current == 0)    && /* head is at init read position */
+        (lstch == '\0')) {   /* last char was not null */
         return true;
     }
     return false;
@@ -117,39 +188,44 @@ struct token readlines (FILE *fp, struct token t)
             //printf("t.count: %d\n", t.count);
 
             if (nxtch == '\0') { /* end of line attempt at buffer overflow */
-                //printf("control 1\n");
+                //printf("control 0\n");
                 endpos = true;
             }
-            if ((endpos == false) && /* this is the first original char */
-                (current == 0)    &&
-                (lstch == '\0')   && 
-                (t.count == 0)) {
-                t = updateToken(t, curch, 'n');
+
+            if (isFirstOrigChar(current, lstch, t)) {
+                //printf("control 1\n");
+                t = updateTokenCount(t, 'i');  
+                t = updateTokenCh(t, curch);
             }
-            if ((endpos == false) &&
-                (current == 0)    &&
-                (lstch == '\0')   &&
-                (t.count != 1)) {  /* char carries over from last line */
-                t = updateToken(t, curch, 's');
-            }
-            if ((curch == nxtch)  &&   /* repeat char within bounds */
-                (endpos == false)) {
+
+            if (isNormRepeatChar(endpos, curch, nxtch, current)) {                
                 //printf("control 2\n");
-                t = updateToken(t, curch, 's');
-            }
-            if ((curch != nxtch) && 
-                (endpos == false)) { /* new char within bounds */
-                //printf("control 3\n");
-                succ = printToken(t);
-                t = updateToken(t, nxtch, 'n');
-            }
-            if ((curch != nxtch) && 
-                (endpos == true)) { /* end of line, token has state */
-                //printf("control 4\n");
-                lstch = curch;      /* control for next line */
+                t = updateTokenCount(t, 's');
+                t = updateTokenCh(t, curch);
             }
             
+            if (isNewCharInLine(endpos, curch, nxtch)) { /* new char within bounds */
+                /* assumes that nxt value will be new char
+                 * so write current state and reset buffer counter */
+                //printf("control 3\n");
+                succ = printToken(t);  /* if nxt is new char */
+                t = updateTokenCount(t, 'n');
+                /* does **not** take action to update token.ch */
+                /* this happens in next iteration */
+            } 
+
+            if (isLineRepeatChar(endpos, current, lstch)) {  
+                /* char carries over from last line */
+                //printf("control 4\n");
+                t = updateTokenCount(t, 's');
+            }
+            
+            if (isEndOfLine(endpos, curch, nxtch)) { /* end of line, token has state */
+                //printf("control 5\n");
+                lstch = curch;      /* control for next line */
+            }
             current++;
+            //printf("current count: %d\n", current);
         }            
     }
     free(line);
@@ -175,12 +251,12 @@ int procfiles (int nfiles, char *files[]) {
         }
         if ( i >= nfiles ) { /* at last file, flush state */
             succ = printToken(curtok);
-            curtok = updateToken(curtok, '\0', 'n'); /* end state */
+            curtok = updateTokenCount(curtok, 'n');  /* next token is NULL */ 
+            curtok = updateTokenCh(curtok, '\0'); /* end state */
         }
-
         fclose(fp);
     }
-    return 0; /* files processing successful */
+    return succ; /* files processing successful */
 } 
 
 int main(int argc, char *argv[])
