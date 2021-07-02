@@ -27,7 +27,7 @@ size_t numbytes (struct token t) {
 void printToken (struct token t) { 
     /* write <token.count><token.ch> to stdout */
     /* write number of occurrences of char as 4 byte int,
-     * followed by char as ASCII i
+     * followed by char as 1 byte ASCII
      * function returns 0 on success, 1 on error
      * */
     if ((t.ch < 0) || (t.ch > 127)) {
