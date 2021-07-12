@@ -1,0 +1,2 @@
+mkdir -p build
+find . -type f -name "*.[c|h]" | xargs clang-format -i

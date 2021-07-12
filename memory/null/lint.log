@@ -1,0 +1,17 @@
+Error while trying to load a compilation database:
+Could not auto-detect compilation database for file "src/null.c"
+No compilation database found in /home/adam/Code/sysprg/memory/null/src or any parent directory
+fixed-compilation-database: Error while opening fixed database: No such file or directory
+json-compilation-database: Error while opening JSON database: No such file or directory
+Running without flags.
+45 warnings and 1 error generated.
+Error while processing /home/adam/Code/sysprg/memory/null/src/null.c.
+/home/adam/Code/sysprg/memory/null/src/null.c:14:44: error: expected ')' [clang-diagnostic-error]
+  data = (int *)malloc(SIZE * (sizeof(int));
+                                           ^
+/home/adam/Code/sysprg/memory/null/src/null.c:14:23: note: to match this '('
+  data = (int *)malloc(SIZE * (sizeof(int));
+                      ^
+Suppressed 45 warnings (45 in non-user code).
+Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.
+Found compiler error(s).
