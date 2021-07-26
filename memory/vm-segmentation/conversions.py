@@ -41,13 +41,12 @@ class Params:
 
 q1params = Params(0, 512, 20, 128)
 
-    """
-    takes a list of virtual memory addresses and translates them to physical
-    ones if they fit into the address space
-    returns an array of valid Address objects
-    returns empty list if no valid translations are possible
-    """
-
+#
+#    takes a list of virtual memory addresses and translates them to physical
+#    ones if they fit into the address space
+#    returns an array of valid Address objects
+#    returns empty list if no valid translations are possible
+#
 def translate(vaddr, memparams):
     valid = []
     for a in vaddr:
@@ -64,6 +63,7 @@ def translate(vaddr, memparams):
                 newaddr = Address(a, paddr, seg)
                 valid.append(newaddr)
     return valid
+
 
 valid = translate(vaddr, q1params)
 print(valid)

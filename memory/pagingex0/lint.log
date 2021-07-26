@@ -1,0 +1,6 @@
+Error while trying to load a compilation database:
+Could not auto-detect compilation database for file "src/array.c"
+No compilation database found in /home/adam/Code/sysprg/memory/pagingex0/src or any parent directory
+fixed-compilation-database: Error while opening fixed database: No such file or directory
+json-compilation-database: Error while opening JSON database: No such file or directory
+Running without flags.

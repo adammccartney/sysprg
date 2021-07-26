@@ -1,0 +1,19 @@
+Error while trying to load a compilation database:
+Could not auto-detect compilation database for file "src/vmseg.c"
+No compilation database found in /home/adam/Code/sysprg/memory/realtranslation/src or any parent directory
+fixed-compilation-database: Error while opening fixed database: No such file or directory
+json-compilation-database: Error while opening JSON database: No such file or directory
+Running without flags.
+58 warnings generated.
+/home/adam/Code/sysprg/memory/realtranslation/src/vmseg.c:29:13: error: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise,-warnings-as-errors]
+  Segment = (VirtualAddress & SEG1_MASK) >> SEG_SHIFT;
+            ^
+/home/adam/Code/sysprg/memory/realtranslation/src/vmseg.c:29:14: error: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise,-warnings-as-errors]
+  Segment = (VirtualAddress & SEG1_MASK) >> SEG_SHIFT;
+             ^
+/home/adam/Code/sysprg/memory/realtranslation/src/vmseg.c:31:12: error: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise,-warnings-as-errors]
+  Offset = VirtualAddress & OFFSET_MASK;
+           ^
+Suppressed 55 warnings (55 in non-user code).
+Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.
+3 warnings treated as errors
