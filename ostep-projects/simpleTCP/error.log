@@ -1,0 +1,22 @@
+gcc -o client TCPclient.c -Wall
+TCPclient.c: In function ‘main’:
+TCPclient.c:41:32: warning: implicit declaration of function ‘inet_addr’; did you mean ‘h_addr’? [-Wimplicit-function-declaration]
+     servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+                                ^~~~~~~~~
+                                h_addr
+TCPclient.c:27:34: warning: unused variable ‘cli’ [-Wunused-variable]
+     struct sockaddr_in servaddr, cli;
+                                  ^~~
+TCPclient.c:26:17: warning: unused variable ‘connfd’ [-Wunused-variable]
+     int sockfd, connfd;
+                 ^~~~~~
+gcc -o server TCPserver.c -Wall
+TCPserver.c: In function ‘main’:
+TCPserver.c:80:40: warning: pointer targets in passing argument 3 of ‘accept’ differ in signedness [-Wpointer-sign]
+     connfd = accept(sockfd, (SA*)&cli, &len);
+                                        ^~~~
+In file included from /usr/include/netinet/in.h:23,
+                 from TCPserver.c:6:
+/usr/include/x86_64-linux-gnu/sys/socket.h:232:12: note: expected ‘socklen_t * restrict’ {aka ‘unsigned int * restrict’} but argument is of type ‘int *’
+ extern int accept (int __fd, __SOCKADDR_ARG __addr,
+            ^~~~~~
