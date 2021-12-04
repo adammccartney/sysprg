@@ -1,0 +1,98 @@
+# vector-blobal-order
+```
+>$./vector-global-order -t -n 2 -l 1000000 -d
+Time: 0.31 seconds
+>$./vector-global-order -t -n 4 -l 1000000 -d                                             
+Time: 1.01 seconds
+>$./vector-global-order -t -n 8 -l 1000000 -d                                             
+Time: 2.35 seconds
+>$./vector-global-order -t -n 1 -l 1000000 -d                                             
+Time: 0.06 seconds
+>$./vector-global-order -t -n 1 -l 1000000 -d -p
+Time: 0.06 seconds
+>$./vector-global-order -t -n 2 -l 1000000 -d -p                                          
+Time: 0.16 seconds
+>$./vector-global-order -t -n 4 -l 1000000 -d -p                                          
+Time: 0.26 seconds
+>$./vector-global-order -t -n 8 -l 1000000 -d -p                                          
+Time: 0.34 seconds
+>$./vector-global-order -t -n 16 -l 1000000 -d -p                                         
+Time: 0.41 seconds
+
+```
+# vector-try-wait
+
+```
+>$./vector-try-wait -t -n 2 -l 1000000 -d
+Retries: 6978000
+Time: 1.02 seconds
+>$./vector-try-wait -t -n 4 -l 1000000 -d
+Retries: 25821932
+Time: 5.16 seconds
+>$./vector-try-wait -t -n 8 -l 1000000 -d
+Retries: 68488221
+Time: 17.02 seconds
+>$./vector-try-wait -t -n 1 -l 1000000 -d
+Retries: 0
+Time: 0.06 seconds
+>$./vector-try-wait -t -n 1 -l 1000000 -d -p
+Retries: 0
+Time: 0.06 seconds
+>$./vector-try-wait -t -n 2 -l 1000000 -d -p
+Retries: 0
+Time: 0.11 seconds
+>$./vector-try-wait -t -n 4 -l 1000000 -d -p
+Retries: 0
+Time: 0.25 seconds
+>$./vector-try-wait -t -n 8 -l 1000000 -d -p
+Retries: 0
+Time: 0.35 seconds
+>$./vector-try-wait -t -n 16 -l 1000000 -d -p
+Retries: 0
+Time: 0.41 seconds
+
+```
+
+# vector-avoid-hold-and-wait
+```
+>$./vector-avoid-hold-and-wait -t -n 2 -l 1000000 -d
+Time: 0.57 seconds
+>$./vector-avoid-hold-and-wait -t -n 4 -l 1000000 -d
+Time: 1.29 seconds
+>$./vector-avoid-hold-and-wait -t -n 8 -l 1000000 -d
+Time: 2.79 seconds
+>$./vector-avoid-hold-and-wait -t -n 1 -l 1000000 -d
+Time: 0.07 seconds
+>$./vector-avoid-hold-and-wait -t -n 1 -l 1000000 -d -p
+Time: 0.07 seconds
+>$./vector-avoid-hold-and-wait -t -n 2 -l 1000000 -d -p
+Time: 0.28 seconds
+>$./vector-avoid-hold-and-wait -t -n 4 -l 1000000 -d -p
+Time: 0.74 seconds
+>$./vector-avoid-hold-and-wait -t -n 8 -l 1000000 -d -p
+Time: 2.00 seconds
+>$./vector-avoid-hold-and-wait -t -n 16 -l 1000000 -d -p
+Time: 3.80 seconds
+```
+
+# vector-nolock
+```
+>$./vector-nolock -t -n 2 -l 1000000 -d
+Time: 3.39 seconds
+>$./vector-nolock -t -n 4 -l 1000000 -d
+Time: 7.15 seconds
+>$./vector-nolock -t -n 8 -l 1000000 -d
+Time: 7.86 seconds
+>$./vector-nolock -t -n 1 -l 1000000 -d
+Time: 0.39 seconds
+>$./vector-nolock -t -n 1 -l 1000000 -d -p
+Time: 0.39 seconds
+>$./vector-nolock -t -n 2 -l 1000000 -d -p
+Time: 0.42 seconds
+>$./vector-nolock -t -n 4 -l 1000000 -d -p
+Time: 0.62 seconds
+>$./vector-nolock -t -n 8 -l 1000000 -d -p
+Time: 1.15 seconds
+>$./vector-nolock -t -n 16 -l 1000000 -d -p
+Time: 2.08 seconds
+```

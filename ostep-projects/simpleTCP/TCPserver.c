@@ -44,7 +44,7 @@ int main()
     int sockfd, connfd, len;
     struct sockaddr_in servaddr, cli;
 
-    // socket create and verification
+    // create and verify socket 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1) {
         printf("socket creation failed ...\n");
