@@ -1,10 +1,12 @@
 #!/bin/sh
 
+if [ "$#" -ne 1 ]; then
+    echo "usage: ${BASH_SOURCE[0]} <location>"
+    exit 1
+fi
 LOCATION="$1"
-results_file="data/${LOCATION}-simple-bench-result.txt"
-touch "$results_file"
 
-echo "running - pipong will transfer a byte back and forth between two processes via a set of pipes..."
+echo "running on ${LOCATION} - pipong will transfer a byte back and forth between two processes via a set of pipes..."
 
 count=0
 total=0
