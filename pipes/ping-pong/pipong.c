@@ -126,7 +126,6 @@ int main(int argc, char *argv[])
     waitpid(c1, NULL, 0);
     waitpid(c2, NULL, 0);
 
-    printf("Child 1 %ld bytes in %.2f seconds\n", c1_count, delay_sec);
-    printf("Child 2 %ld bytes in %.2f seconds\n", c2_count, delay_sec);
+    printf("Child 1: %ld, child 2: %ld bytes in %.2f seconds\n", c1_count, c2_count, delay_sec);
     exit(EXIT_SUCCESS);
 }
