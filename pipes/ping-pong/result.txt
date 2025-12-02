@@ -1,0 +1,2 @@
+Child 1 21172600 bytes in 100.00 seconds
+Child 2 21172601 bytes in 100.00 seconds
